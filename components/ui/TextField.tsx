@@ -3,13 +3,16 @@ import { View, StyleSheet, TextInput, Pressable } from "react-native";
 import { iconSize, s } from "@/styles/common";
 import { Colors } from "@/constants/Themes";
 import { FontAwesome } from "@expo/vector-icons";
+import { formatToArray } from "@/utils/formatToArray";
 
 export type TextFieldProps = {
   placeholder?: string;
   hollow?: boolean;
   style?: any;
+  fontSize?: number;
   inputStyle?: any;
   type?: "text" | "number" | "email" | "password" | "tel";
+  multiline?: boolean,
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   onChange?: (text: string) => void;
@@ -19,10 +22,12 @@ export type TextFieldProps = {
 };
 
 export default function TextField({
-  style,
   placeholder,
   hollow,
+  style,
+  fontSize = 18,
   type = "text",
+  multiline = false,
   startIcon,
   inputStyle,
   endIcon,
@@ -38,7 +43,7 @@ export default function TextField({
       style={[
         hollow ? styles.hollow : styles.nonHollow,
         s.roundingAndPadding,
-        ...(Array.isArray(style) ? style : [style]),
+        ...formatToArray(style),
       ]}
     >
       <View style={[styles.inputContainer]}>
@@ -49,7 +54,8 @@ export default function TextField({
             styles.buttonText,
             s.montserratFontRegular,
             { width: type === "password" ? 275 : 300 },
-            ...(Array.isArray(inputStyle) ? inputStyle : [inputStyle]),
+            { fontSize: fontSize },
+            ...formatToArray(inputStyle),
           ]}
           placeholder={placeholder}
           keyboardType={
@@ -61,10 +67,11 @@ export default function TextField({
           }
           onChangeText={onChange}
           value={value}
+          multiline={multiline}
           editable={!disabled}
           maxLength={maxLength}
         />
-        {endIcon && <View style={styles.iconContainer}>{endIcon}</View>}
+        {endIcon && <View style={[styles.endIconContainer]}>{endIcon}</View>}
         {type === "password" && (
           <Pressable
             style={[styles.passwordIcon]}
@@ -75,13 +82,13 @@ export default function TextField({
             {isPasswordVisible ? (
               <FontAwesome
                 name="eye"
-                size={iconSize.fontAwesome}
+                size={iconSize.large}
                 color={Colors.grey}
               />
             ) : (
               <FontAwesome
                 name="eye-slash"
-                size={iconSize.fontAwesome}
+                size={iconSize.large}
                 color={Colors.grey}
               />
             )}
@@ -99,14 +106,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: Colors.grey,
+    height: 55,
   },
   nonHollow: {
     backgroundColor: Colors.white,
     flexDirection: "row",
+    height: 55,
   },
   buttonText: {
-    fontSize: 18,
     transform: [{ translateY: 2 }],
+    textAlignVertical: "top",
+    height: "100%"
   },
   inputContainer: {
     flex: 1,
@@ -115,6 +125,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     paddingRight: 10,
+  },
+  endIconContainer: {
+    marginLeft: "auto"
   },
   passwordIcon: {
     position: "absolute",

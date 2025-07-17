@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from "react-native";
 import { Colors } from "@/constants/Themes";
 
-export const iconSize = {fontAwesome: 30, feather: 24};
+export const iconSize = { large: 30, regular: 24, small: 20 };
 
 export const s = StyleSheet.create({
   // Spacing and Sizing.
@@ -10,9 +10,11 @@ export const s = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  mainScrollContainer: {
+    width: "93.75%"
+  },
   roundingAndPadding: {
     borderRadius: 20,
-    height: 55,
     paddingInline: 15,
     columnGap: 10,
     alignItems: "center",
@@ -27,9 +29,16 @@ export const s = StyleSheet.create({
     fontSize: 24,
     color: Colors.primary,
     marginBottom: 10,
+    paddingTop: 30,
   },
 
   // Fonts.
+  montserratFontExtraBold: {
+    fontFamily: "Montserrat-ExtraBold",
+  },
+  montserratFontBold: {
+    fontFamily: "Montserrat-Bold",
+  },
   montserratFontSemiBold: {
     fontFamily: "Montserrat-SemiBold",
   },
@@ -41,5 +50,8 @@ export const s = StyleSheet.create({
   },
   montserratFontLight: {
     fontFamily: "Montserrat-Light",
+  },
+  montserratFontThin: {
+    fontFamily: "Montserrat-Thin",
   },
 });

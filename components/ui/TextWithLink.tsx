@@ -1,64 +1,70 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Link, LinkProps } from "expo-router";
 import { s } from "@/styles/common";
+import { formatToArray } from "@/utils/formatToArray";
 
 type TextWithLinkProps = {
   containerStyles?: any;
   text?: string;
   textStyles?: any;
-  link?: string;
+  linkText?: string;
   linkStyles?: any;
-  href: LinkProps["href"];
+  href?: LinkProps["href"];
   linkHasUnderline?: boolean;
+  linkHasArrow?: boolean;
   fontSize?: number;
+  variant?: "combined" | "separated";
 };
 
 export default function TextWithLink({
   containerStyles,
   text,
   textStyles,
-  link,
+  linkText,
   linkStyles,
   href,
   linkHasUnderline = true,
+  linkHasArrow = false,
   fontSize = 16,
+  variant = "combined",
 }: TextWithLinkProps) {
+  const link = (
+    <Link href={href || "/"} disabled={href == null}>
+      <Text
+        style={[
+          s.montserratFontRegular,
+          styles.link,
+          { fontSize: fontSize },
+          linkHasUnderline ? styles.underline : styles.noUnderline,
+          ...formatToArray(linkStyles),
+        ]}
+      >
+        {linkText}
+        {linkHasArrow && " >"} {/* Could be changed later */}
+      </Text>
+    </Link>
+  );
+
   return (
     <View
       style={[
         styles.container,
-        ...(Array.isArray(containerStyles)
-          ? containerStyles
-          : [containerStyles]),
+        variant === "separated" && styles.separated,
+        ...formatToArray(containerStyles),
       ]}
     >
       <Text
         style={[
           s.montserratFontRegular,
           { fontSize: fontSize },
-          ...(Array.isArray(textStyles) ? textStyles : [textStyles]),
+          ...formatToArray(textStyles),
         ]}
       >
         {text}
-        <Link href={href}>
-          <Text
-            style={[
-              s.montserratFontRegular,
-              styles.link,
-              { fontSize: fontSize },
-              linkHasUnderline ? styles.underline : styles.noUnderline,
-              ...(Array.isArray(linkStyles) ? linkStyles : [linkStyles]),
-            ]}
-          >
-            {link}
-          </Text>
-        </Link>
+        {variant === "combined" && linkText && link}
       </Text>
+      {variant === "separated" && linkText && link}
     </View>
   );
 }
@@ -66,7 +72,9 @@ export default function TextWithLink({
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    justifyContent: "center",
+  },
+  separated: {
+    justifyContent: "space-between",
     flexDirection: "row",
   },
   link: {

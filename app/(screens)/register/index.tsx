@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, SafeAreaView } from "react-native";
 import { TextField, VariableButton, TextWithLink } from "@/components";
 import { Checkbox } from "expo-checkbox";
 import { iconSize, s } from "@/styles/common";
@@ -10,27 +10,26 @@ import { router } from "expo-router";
 export default function SignUpScreen() {
   const [isChecked, setChecked] = useState(false);
   return (
-    <View style={styles.topContainer}>
+    <SafeAreaView style={[s.topContainer, styles.topContainer]}>
       <Text style={s.subtitle}>Sign Up New Account</Text>
       <View style={styles.inputsContainer}>
         <TextField
-          startIcon={<Feather name="user" size={iconSize.feather} />}
+          startIcon={<Feather name="user" size={iconSize.regular} />}
           placeholder="User Name"
           hollow={true}
         />
         <TextField
-          startIcon={<Feather name="smartphone" size={iconSize.feather} />}
+          startIcon={<Feather name="smartphone" size={iconSize.regular} />}
           placeholder="Mobile Number"
           hollow={true}
         />
         <TextField
-          startIcon={<Feather name="key" size={iconSize.feather} />}
+          startIcon={<Feather name="key" size={iconSize.regular} />}
           placeholder="Password"
           type="password"
           hollow={true}
         />
       </View>
-      <VariableButton title="SIGN UP" onPress={() =>{router.push("/login")}} variant="gradient" />
       <View style={styles.termsContainer}>
         <Checkbox
           value={isChecked}
@@ -40,35 +39,42 @@ export default function SignUpScreen() {
         <View>
           <TextWithLink
             text="I read and agreed on drivers.sg "
-            textStyles={styles.termsText}
-            link="Terms & Conditions"
+            textStyles={styles.termsAndSignUpText}
+            linkText="Terms & Conditions"
             linkStyles={s.montserratFontMedium}
             href="https://www.privacypolicyonline.com/sample-terms-conditions-template/"
-            fontSize={18}
+            fontSize={16}
           />
         </View>
       </View>
+      <VariableButton
+        title="SIGN UP"
+        onPress={() => {
+          router.push("/login");
+        }}
+        variant="gradient"
+        fontSize={18}
+      />
       <TextWithLink
         containerStyles={styles.signUpContainer}
         text="Already have an account? "
-        textStyles={styles.termsText}
-        link="Login"
-        linkStyles={s.montserratFontMedium}
+        textStyles={[styles.termsAndSignUpText, s.montserratFontRegular]}
+        linkText="Login"
+        linkStyles={[s.montserratFontSemiBold]}
         href="/login"
         linkHasUnderline={false}
         fontSize={16}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   topContainer: {
-    flex: 1,
-    alignItems: "center",
-    paddingTop: 70,
-    gap: 30,
+    justifyContent: "flex-start",
     backgroundColor: Colors.white,
+    paddingTop: 30,
+    gap: 30,
   },
   inputsContainer: {
     justifyContent: "center",
@@ -80,22 +86,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     columnGap: 15,
   },
-  termsText: {
+  termsAndSignUpText: {
     width: 375,
     fontSize: 16,
     color: Colors.black,
   },
   termsLink: {
     fontSize: 16,
-    color: Colors.secondary,
-    textDecorationStyle: "solid",
-    textDecorationLine: "underline",
   },
   signUpContainer: {
     position: "absolute",
-    left: 77,
     bottom: 100,
-    alignSelf: "center",
+    marginLeft: 120,
     flexDirection: "row",
   },
   footer: {
