@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,10 +28,12 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <AutocompleteDropdownContextProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </AutocompleteDropdownContextProvider>
   );
 }

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  ViewStyle,
+} from "react-native";
 import { iconSize, s } from "@/styles/common";
 import { Colors } from "@/constants/Themes";
 import { FontAwesome } from "@expo/vector-icons";
@@ -8,17 +14,18 @@ import { formatToArray } from "@/utils/formatToArray";
 export type TextFieldProps = {
   placeholder?: string;
   hollow?: boolean;
-  style?: any;
+  style?: ViewStyle | ViewStyle[];
   fontSize?: number;
   inputStyle?: any;
   type?: "text" | "number" | "email" | "password" | "tel";
-  multiline?: boolean,
+  multiline?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   onChange?: (text: string) => void;
   value?: string;
   disabled?: boolean;
   maxLength?: number;
+  numberOfLines?: number;
 };
 
 export default function TextField({
@@ -35,6 +42,7 @@ export default function TextField({
   value,
   disabled,
   maxLength,
+  numberOfLines,
 }: TextFieldProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -68,6 +76,7 @@ export default function TextField({
           onChangeText={onChange}
           value={value}
           multiline={multiline}
+          numberOfLines={numberOfLines}
           editable={!disabled}
           maxLength={maxLength}
         />
@@ -116,7 +125,7 @@ const styles = StyleSheet.create({
   buttonText: {
     transform: [{ translateY: 2 }],
     textAlignVertical: "top",
-    height: "100%"
+    height: "100%",
   },
   inputContainer: {
     flex: 1,
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   endIconContainer: {
-    marginLeft: "auto"
+    marginLeft: "auto",
   },
   passwordIcon: {
     position: "absolute",

@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import { ReliefPostData, ReliefPosts } from "@/types/ReliefPost";
+import { ReliefPostData, ReliefPosts } from "@/types/relief-tab/ReliefPost";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { iconSize, s } from "@/styles/common";
 import { getData } from "@/utils/crudStorage";
@@ -15,13 +15,13 @@ import NotFound from "@/app/_not_found";
 import { getFormattedDay, getFormattedTime } from "@/utils/dateFormat";
 import InfoHeader from "@/components/layout/InfoHeader";
 import { Card, VariableButton } from "@/components";
-import { snakeCaseToTitle } from "@/utils/formatSnakeCaseToTitle";
-import PostInfoText from "../../components/PostInfoText";
-import HorizontalLine from "../../components/HorizontalLine";
+import { snakeCaseToTitle } from "@/utils/caseFormat";
+import PostInfoText from "@/components/relief-tab/PostInfoText";
+import HorizontalLine from "@/components/layout/HorizontalLine";
 import BottomSpacing from "@/components/layout/BottomSpacing";
-import { Feather } from "@expo/vector-icons";
+import PriceDetails from "@/components/relief-tab/PriceDetails";
 import { Colors } from "@/constants/Themes";
-import { WhatsappIcon } from "@/constants/CustomIcons";
+import { LocationPinIconBlack, WhatsappIcon } from "@/constants/CustomIcons";
 import { router } from "expo-router";
 
 export default function Post() {
@@ -52,16 +52,18 @@ export default function Post() {
     return <NotFound />;
   }
 
-  const safePhotoURI = post.vehiclePhoto;
   return (
     <SafeAreaView style={[s.topContainer]}>
-      <InfoHeader onBack={() => router.push("/reliefs")} title={post.vehicleDetails.brand} />
+      <InfoHeader
+        onBack={() => router.push("/reliefs")}
+        title={post.vehicleDetails.brand}
+      />
       <ScrollView
         contentContainerStyle={[styles.scrollContainer, s.mainScrollContainer]}
         showsVerticalScrollIndicator={false}
       >
         <Card>
-          <Image style={styles.image} source={{ uri: safePhotoURI }} />
+          <Image style={styles.image} source={{ uri: post.vehiclePhoto }} />
         </Card>
         <Card padding={18}>
           <PostInfoText headingType="title">
@@ -73,17 +75,10 @@ export default function Post() {
 
           <HorizontalLine />
 
-          <View style={styles.priceContainer}>
-            <Text style={[styles.price, s.montserratFontBold]}>
-              ${post.price.amount}
-            </Text>
-            <Text style={[styles.priceSuffix, s.montserratFontRegular]}>
-              /day
-            </Text>
-          </View>
-          <PostInfoText headingType="tag">
-            {post.price.cdw === "include" ? "With CDW" : "Without CDW"}
-          </PostInfoText>
+          <PriceDetails
+            amount={String(post.price.amount)}
+            cdw={post.price.cdw}
+          />
 
           <HorizontalLine />
 
@@ -101,7 +96,12 @@ export default function Post() {
           <PostInfoText headingType="subtitle">Location</PostInfoText>
           <PostInfoText
             headingType="detail"
-            startIcon={<Feather name="map-pin" size={iconSize.regular} />}
+            startIcon={
+              <LocationPinIconBlack
+                width={iconSize.regular}
+                height={iconSize.regular}
+              />
+            }
           >
             {snakeCaseToTitle(post.preferredLocation.region)},{" "}
             {snakeCaseToTitle(post.preferredLocation.area)}
@@ -138,8 +138,12 @@ export default function Post() {
               style={styles.profileImage}
             />
             <View style={styles.profileTextContainer}>
-              <Text style={[styles.profileName, s.montserratFontSemiBold]}>Jonathan Smith</Text>
-              <Text style={[styles.profileNumber, s.montserratFontRegular]}>+65 82987722</Text>
+              <Text style={[styles.profileName, s.montserratFontSemiBold]}>
+                Jonathan Smith
+              </Text>
+              <Text style={[styles.profileNumber, s.montserratFontRegular]}>
+                +65 82987722
+              </Text>
             </View>
           </View>
           <VariableButton
@@ -166,22 +170,12 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 16 / 9,
     objectFit: "scale-down",
-  },
-  priceContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  price: {
-    fontSize: 36,
-    color: Colors.primary,
-  },
-  priceSuffix: {
-    fontSize: 18,
-    color: Colors.text,
+    borderRadius: 20,
   },
 
   contactContainer: {
-    gap: 16},
+    gap: 16,
+  },
   contactButton: {
     backgroundColor: Colors.success,
     alignItems: "center",

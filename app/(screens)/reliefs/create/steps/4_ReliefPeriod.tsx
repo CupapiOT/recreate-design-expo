@@ -1,27 +1,26 @@
 import { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
-import { Feather } from "@expo/vector-icons";
+import { View, StyleSheet, Alert } from "react-native";
 import { iconSize } from "@/styles/common";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import PressableInput from "../../../components/PressableInput";
-import { ReliefPostData } from "@/types/ReliefPost";
+import { pickDateTime } from "@/utils/pickDateTime";
+import { FormHeading, PressableInput } from "@/components/relief-tab";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
 import { getData, updateNestedData } from "@/utils/crudStorage";
 import { getFormattedDay, getFormattedTime } from "@/utils/dateFormat";
+import { ClockIcon, CalendarIcon } from "@/constants/CustomIcons";
 
 export default function ReliefPeriod() {
   const [collectionDate, setCollectionDate] = useState<
-    Date | "Collection Date" | undefined
+    Date | "Collection Date" | null
   >("Collection Date");
   const [collectionTime, setCollectionTime] = useState<
-    Date | "Collection Time" | undefined
+    Date | "Collection Time" | null
   >("Collection Time");
-  const [returnDate, setReturnDate] = useState<
-    Date | "Return Date" | undefined
-  >("Return Date");
-  const [returnTime, setReturnTime] = useState<
-    Date | "Return Time" | undefined
-  >("Return Time");
+  const [returnDate, setReturnDate] = useState<Date | "Return Date" | null>(
+    "Return Date",
+  );
+  const [returnTime, setReturnTime] = useState<Date | "Return Time" | null>(
+    "Return Time",
+  );
 
   // Load from AsyncStorage
   useEffect(() => {
@@ -31,7 +30,6 @@ export default function ReliefPeriod() {
           "reliefPostLocalStore",
         )) as ReliefPostData | null;
         if (data && data?.reliefPeriod.collectionDate) {
-          console.log(data?.reliefPeriod.collectionDate);
           setCollectionDate(
             data.reliefPeriod
               .collectionDate as ReliefPostData["reliefPeriod"]["collectionDate"],
@@ -56,10 +54,23 @@ export default function ReliefPeriod() {
           setReturnDate("Return Date");
         }
         if (data && data?.reliefPeriod?.returnTime) {
-          setReturnTime(
-            data.reliefPeriod
-              .returnTime as ReliefPostData["reliefPeriod"]["returnTime"],
-          );
+          if (
+            returnTime &&
+            collectionTime &&
+            returnTime < collectionTime &&
+            collectionDate === returnDate
+          ) {
+            Alert.alert(
+              "Info: Return time is earlier than collection time.",
+              `Please select a time after:\n${getFormattedDay(collectionDate, true)}, ${getFormattedTime(collectionTime === "Collection Time" ? new Date() : collectionTime)}`,
+            );
+            onChangeReturnTime("", null);
+          } else {
+            setReturnTime(
+              data.reliefPeriod
+                .returnTime as ReliefPostData["reliefPeriod"]["returnTime"],
+            );
+          }
         } else {
           setReturnTime("Return Time");
         }
@@ -69,67 +80,41 @@ export default function ReliefPeriod() {
     };
 
     loadData();
-  }, []);
+  });
 
   // Define functions to change states and upload to AsyncStorage.
-  const onChangeCollectionDate = async (
-    e: any,
-    selectedDate: Date | undefined,
-  ) => {
-    setCollectionDate(selectedDate);
+  const onChangeCollectionDate = async (e: any, selectedDate: Date | null) => {
     await updateNestedData(
       "reliefPostLocalStore",
       ["reliefPeriod", "collectionDate"],
       selectedDate,
     );
+    setCollectionDate(selectedDate);
   };
-  const onChangeCollectionTime = async (
-    e: any,
-    selectedTime: Date | undefined,
-  ) => {
-    setCollectionTime(selectedTime);
+  const onChangeCollectionTime = async (e: any, selectedTime: Date | null) => {
     await updateNestedData(
       "reliefPostLocalStore",
       ["reliefPeriod", "collectionTime"],
       selectedTime,
     );
+    setCollectionTime(selectedTime);
   };
-  const onChangeReturnDate = async (e: any, selectedDate: Date | undefined) => {
-    setReturnDate(selectedDate);
+  const onChangeReturnDate = async (e: any, selectedDate: Date | null) => {
     await updateNestedData(
       "reliefPostLocalStore",
       ["reliefPeriod", "returnDate"],
       selectedDate,
     );
+    setReturnDate(selectedDate ?? "Return Date");
   };
-  const onChangeReturnTime = async (e: any, selectedTime: Date | undefined) => {
-    setReturnTime(selectedTime);
+  const onChangeReturnTime = async (e: any, selectedTime: Date | null) => {
     await updateNestedData(
       "reliefPostLocalStore",
       ["reliefPeriod", "returnTime"],
       selectedTime,
     );
+    setReturnTime(selectedTime ?? "Return Time");
   };
-
-  const showMode = (
-    date: Date | undefined,
-    currentMode: "date" | "time",
-    onChange: (event: any, selected: Date | undefined) => void,
-  ) => {
-    if (!(date instanceof Date)) {
-      date = new Date();
-    }
-    DateTimePickerAndroid.open({
-      value: date,
-      mode: currentMode,
-      onChange: onChange,
-      is24Hour: false,
-    });
-  };
-
-  console.log(collectionDate instanceof Date);
-  console.log(typeof collectionDate);
-  console.log();
 
   return (
     <View style={styles.container}>
@@ -138,16 +123,17 @@ export default function ReliefPeriod() {
         value={
           collectionDate === "Collection Date"
             ? collectionDate
-            : getFormattedDay(collectionDate)
+            : getFormattedDay(collectionDate, true)
         }
         onPress={() => {
-          showMode(
-            collectionDate instanceof Date ? collectionDate : new Date(),
-            "date",
-            onChangeCollectionDate,
-          );
+          pickDateTime(collectionDate, "date", onChangeCollectionDate);
+          if (collectionDate && returnDate && collectionDate > returnDate) {
+            onChangeReturnDate("", null);
+          }
         }}
-        endIcon={<Feather size={iconSize.regular} name="calendar" />}
+        endIcon={
+          <CalendarIcon width={iconSize.regular} height={iconSize.regular} />
+        }
       />
       <PressableInput
         value={
@@ -156,28 +142,24 @@ export default function ReliefPeriod() {
             : getFormattedTime(collectionTime)
         }
         onPress={() => {
-          showMode(
-            collectionTime instanceof Date ? collectionTime : new Date(),
-            "time",
-            onChangeCollectionTime,
-          );
+          pickDateTime(collectionTime, "time", onChangeCollectionTime);
         }}
-        endIcon={<Feather size={iconSize.regular} name="clock" />}
+        endIcon={
+          <ClockIcon width={iconSize.regular} height={iconSize.regular} />
+        }
       />
       <PressableInput
         value={
           returnDate === "Return Date"
             ? returnDate
-            : getFormattedDay(returnDate)
+            : getFormattedDay(returnDate, true)
         }
         onPress={() => {
-          showMode(
-            returnDate instanceof Date ? returnDate : new Date(),
-            "date",
-            onChangeReturnDate,
-          );
+          pickDateTime(returnDate, "date", onChangeReturnDate, collectionDate);
         }}
-        endIcon={<Feather size={iconSize.regular} name="calendar" />}
+        endIcon={
+          <CalendarIcon width={iconSize.regular} height={iconSize.regular} />
+        }
       />
       <PressableInput
         value={
@@ -186,13 +168,11 @@ export default function ReliefPeriod() {
             : getFormattedTime(returnTime)
         }
         onPress={() => {
-          showMode(
-            returnTime instanceof Date ? returnTime : new Date(),
-            "time",
-            onChangeReturnTime,
-          );
+          pickDateTime(returnTime, "time", onChangeReturnTime);
         }}
-        endIcon={<Feather size={iconSize.regular} name="clock" />}
+        endIcon={
+          <ClockIcon width={iconSize.regular} height={iconSize.regular} />
+        }
       />
     </View>
   );

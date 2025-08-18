@@ -6,4 +6,9 @@ function snakeCaseToTitle(rawString: string): string {
   );
 }
 
-export { snakeCaseToTitle };
+function titleToSnakeCase(rawString: string): string {
+  const formatted = rawString.replaceAll(" ", "_");
+  return formatted.toLowerCase();
+}
+
+export { snakeCaseToTitle, titleToSnakeCase };

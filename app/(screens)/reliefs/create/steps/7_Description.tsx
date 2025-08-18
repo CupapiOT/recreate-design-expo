@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
+import { View, StyleSheet } from "react-native";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
+import { FormHeading } from "@/components/relief-tab";
 import { TextField } from "@/components";
-import { ReliefPostData } from "@/types/ReliefPost";
 import { getData, updateNestedData } from "@/utils/crudStorage";
-import { s } from "@/styles/common";
 
 export default function Description() {
   const [desc, setDesc] = useState("");
@@ -33,15 +32,17 @@ export default function Description() {
   return (
     <View style={[styles.container]}>
       <FormHeading text="Description" />
-        <TextField
-          value={desc}
-          onChange={handleChange}
-          multiline={true}
-          style={styles.input}
-          inputStyle={styles.inputStyle}
-          placeholder="Enter description here!"
-          fontSize={16}
-        />
+      <TextField
+        value={desc}
+        onChange={handleChange}
+        multiline={true}
+        style={styles.input}
+        inputStyle={styles.inputStyle}
+        placeholder="Enter description here!"
+        fontSize={16}
+        maxLength={500}
+        numberOfLines={23}
+      />
     </View>
   );
 }

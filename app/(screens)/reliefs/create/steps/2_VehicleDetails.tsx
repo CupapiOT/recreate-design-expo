@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
+import { FormHeading } from "@/components/relief-tab";
 import { TextField } from "@/components";
-import { ReliefPostData } from "@/types/ReliefPost";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
 import { getData, updateNestedData } from "@/utils/crudStorage";
 
 export default function VehicleDetails() {

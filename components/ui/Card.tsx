@@ -4,7 +4,7 @@ import { View, ViewStyle } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 type CardProps = {
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   children?: ReactNode;
   padding?: number;
   paddingHorizontal?: number;

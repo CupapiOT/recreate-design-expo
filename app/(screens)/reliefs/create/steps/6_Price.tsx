@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
+import { FormHeading } from "@/components/relief-tab";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
 import { TextField, LabeledRadioButton } from "@/components";
 import { Feather } from "@expo/vector-icons";
 import { iconSize } from "@/styles/common";
 import { Colors } from "@/constants/Themes";
-import { ReliefPostData } from "@/types/ReliefPost";
 import { getData, updateNestedData } from "@/utils/crudStorage";
 
 export default function Price() {
@@ -27,7 +27,7 @@ export default function Price() {
         if (data && data.price) {
           setPrice(data.price.amount as ReliefPostData["price"]["amount"]);
         } else {
-          await updateNestedData("reliefPostLocalStore", ["price", "amount"], "Enter Price");
+          await updateNestedData("reliefPostLocalStore", ["price", "amount"], 0);
         }
         if (data && data.price) {
           setChecked(data.price.cdw as ReliefPostData["price"]["cdw"]);

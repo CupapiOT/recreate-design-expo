@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { LabeledRadioButton } from "@/components";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
-import { ReliefPostData } from "@/types/ReliefPost";
+import { FormHeading } from "@/components/relief-tab";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
 import { getData, updateNestedData } from "@/utils/crudStorage";
 
 export default function RentDetail() {

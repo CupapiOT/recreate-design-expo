@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from "react-native";
 import { Colors } from "@/constants/Themes";
 
-export const iconSize = { large: 30, regular: 24, small: 20 };
+export const iconSize = { large: 30, medium: 27, regular: 24, small: 20 };
 
 export const s = StyleSheet.create({
   // Spacing and Sizing.
@@ -11,7 +11,7 @@ export const s = StyleSheet.create({
     alignItems: "center",
   },
   mainScrollContainer: {
-    width: "93.75%"
+    width: "93.75%",
   },
   roundingAndPadding: {
     borderRadius: 20,

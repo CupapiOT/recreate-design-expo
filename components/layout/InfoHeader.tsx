@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 
 type InfoHeaderProps = {
-  title?: string;
+  title: string;
   onBack?: (event: GestureResponderEvent) => void;
   paddingTop?: number;
   paddingBottom?: number;

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet, Pressable, Image } from "react-native";
-import FormHeading from "@/app/(screens)/reliefs/components/FormHeading";
+import { FormHeading } from "@/components/relief-tab";
 import { UploadImage } from "@/constants/CustomIcons";
 import * as ImagePicker from "expo-image-picker";
 import { Colors } from "@/constants/Themes";
 import { getData, updateNestedData } from "@/utils/crudStorage";
-import { ReliefPostData } from "@/types/ReliefPost";
+import { ReliefPostData } from "@/types/relief-tab/ReliefPost";
 
 export default function VehiclePhoto() {
   const [image, setImage] = useState<string | null>(null);
@@ -31,6 +31,7 @@ export default function VehiclePhoto() {
       mediaTypes: ["images"],
       allowsEditing: true,
       quality: 1,
+      aspect: [16, 9]
     });
     if (!result.canceled) {
       const uri = result.assets[0].uri;

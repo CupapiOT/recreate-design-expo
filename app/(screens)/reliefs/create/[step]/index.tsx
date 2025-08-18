@@ -6,7 +6,8 @@ import { VariableButton } from "@/components";
 import { Colors } from "@/constants/Themes";
 import { s } from "@/styles/common";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProgressBarNode from "@/app/(screens)/reliefs/components/ProgressBarNode";
+import ProgressBarNode from "@/components/relief-tab/ProgressBarNode";
+import { ReliefPosts } from "@/types/relief-tab/ReliefPost";
 import {
   S1_RentDetail,
   S2_VehicleDetails,
@@ -15,9 +16,8 @@ import {
   S5_Location,
   S6_Price,
   S7_Description,
-} from "./steps";
+} from "../steps";
 import { getData, setData } from "@/utils/crudStorage";
-import { ReliefPosts } from "@/types/ReliefPost";
 
 export default function Steps() {
   const MAX_STEP_COUNT = 7;

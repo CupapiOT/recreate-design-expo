@@ -1,4 +1,4 @@
-import { ContinentsType } from "@/constants/continentsAndCountries";
+import { AreasType } from "@/constants/singaporeLocations";
 
 type ReliefPostData = {
   rentDetail: "temporaryRelief" | "takeOverContract" | "shareVehicle";
@@ -15,7 +15,7 @@ type ReliefPostData = {
     returnTime: Date;
   };
   preferredLocation: {
-    region: ContinentsType;
+    region: AreasType;
     area: string;
   };
   price: {

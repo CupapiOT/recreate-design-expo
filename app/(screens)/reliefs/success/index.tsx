@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { s } from "@/styles/common";
 import { Colors } from "@/constants/Themes";
-import FormHeading from "../components/FormHeading";
+import FormHeading from "@/components/relief-tab/FormHeading";
 import { getData } from "@/utils/crudStorage";
 
 export default function SuccessfulPost() {
