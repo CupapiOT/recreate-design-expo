@@ -27,7 +27,7 @@ export default function ProfileHeader({ profileImage, profileName }: HeaderProps
         </Text>
       </View>
       <Ionicons
-        onPress={() => router.push("/login")}
+        onPress={() => router.push("/notifications")}
         name="notifications-sharp"
         size={30}
         color={Colors.primary}

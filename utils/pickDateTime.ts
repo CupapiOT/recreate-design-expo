@@ -7,10 +7,8 @@ function getSafeDate(date: Date | string | null | undefined) {
     } catch {
       date = new Date();
     }
-  } else if (date == null) {
-    date = new Date();
   }
-  return date;
+  return date ?? new Date();
 }
 
 export function pickDateTime(

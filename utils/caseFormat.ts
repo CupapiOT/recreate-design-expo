@@ -11,4 +11,8 @@ function titleToSnakeCase(rawString: string): string {
   return formatted.toLowerCase();
 }
 
-export { snakeCaseToTitle, titleToSnakeCase };
+function lowerCaseToSentence(rawString: string): string {
+  return rawString.charAt(0).toUpperCase() + rawString.slice(1) + ".";
+}
+
+export { snakeCaseToTitle, titleToSnakeCase, lowerCaseToSentence };

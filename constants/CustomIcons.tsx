@@ -1,5 +1,6 @@
 export { default as DriversSGLogo } from "../assets/images/icons/driverssg-logo.svg";
 export { default as DriversSGIcon } from "../assets/images/icons/driverssg-icon.svg";
+export { default as Megaphone } from "../assets/images/icons/megaphone.svg";
 
 // Relief Icons
 //   Form-specific

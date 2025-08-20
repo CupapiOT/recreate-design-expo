@@ -1,6 +1,6 @@
 import { formatToArray } from "@/utils/formatToArray";
 import React, { ReactNode } from "react";
-import { View, ViewStyle } from "react-native";
+import { Pressable, View, ViewStyle } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 type CardProps = {
@@ -11,6 +11,8 @@ type CardProps = {
   paddingVertical?: number;
   borderRadius?: number;
   backgroundColor?: string;
+  variant?: "view" | "pressable";
+  onPress?: () => void;
 };
 
 export default function Card({
@@ -21,9 +23,11 @@ export default function Card({
   paddingVertical = padding,
   borderRadius = 20,
   backgroundColor = Colors.white,
+  variant = "view",
+  onPress,
   ...props
 }: CardProps) {
-  return (
+  return variant === "view" ? (
     <View
       style={[
         {
@@ -39,5 +43,22 @@ export default function Card({
     >
       {children}
     </View>
+  ) : (
+    <Pressable
+      onPress={onPress ?? (() => {})}
+      style={[
+        {
+          padding,
+          paddingHorizontal,
+          paddingVertical,
+          borderRadius,
+          backgroundColor,
+        },
+        ...formatToArray(style),
+      ]}
+      {...props}
+    >
+      {children}
+    </Pressable>
   );
 }
